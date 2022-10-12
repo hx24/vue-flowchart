@@ -16,12 +16,12 @@
     @dragover.stop="handleDragOver" @dragend.stop="handleDragEnd" @drop.stop="handleDrop">
     <!-- 组织树 -->
     <div class="org-tree-node-label" v-if="treeType == 'org'">
-      <!-- <node-icon v-if="node.childNodes && node.childNodes.length > 0" :node="node">
+      <node-icon v-if="node.childNodes && node.childNodes.length > 0" :node="node">
         <template v-slot="slotProps">
           <slot :node="slotProps.node"></slot>
 
         </template>
-      </node-icon> -->
+      </node-icon>
       <node-content :node="node" :render-content="renderContent" :tree-type="treeType" />
     </div>
     <!-- 普通树 -->
@@ -237,9 +237,9 @@ export default defineComponent({
       )
       tree.currentNode.value = props.node
 
-      // if (tree.props.expandOnClickNode) {
-      //   handleExpandIconClick()
-      // }
+      if (tree.props.expandOnClickNode) {
+        handleExpandIconClick()
+      }
 
       if (tree.props.checkOnClickNode && !props.node.disabled) {
         handleCheckChange(null, {
@@ -267,9 +267,11 @@ export default defineComponent({
       if (props.node.isLeaf) return
       if (expanded.value) {
         tree.ctx.emit('node-collapse', props.node.data, props.node, instance)
-        props.node.collapse()
+        console.log('222', props.node)
+
+        // props.node.collapse()
       } else {
-        props.node.expand()
+        // props.node.expand()
         ctx.emit('node-expand', props.node.data, props.node, instance)
       }
     }

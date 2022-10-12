@@ -6,11 +6,13 @@ $nodeLineHeight: calc($nodePadding / 2);
   padding: 15px;
   background-color: #fff;
 }
+
 .org-tree {
   display: table;
   text-align: center;
 
-  &:before, &:after {
+  &:before,
+  &:after {
     content: '';
     display: table;
   }
@@ -31,20 +33,22 @@ $nodeLineHeight: calc($nodePadding / 2);
 }
 
 .is-drop-inner {
-    background-color: #409eff;
-    color: #fff;
+  background-color: #409eff;
+  color: #fff;
 }
+
 .org-tree-node.collapsed {
   .org-tree-node-label:after {
-      content: "";
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 50%;
-      height: 20px;
-      border-right: 1px solid #ddd;
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 50%;
+    height: 20px;
+    border-right: 1px solid #ddd;
   }
 }
+
 .org-tree-node,
 .org-tree-node-children {
   font-size: 0;
@@ -53,16 +57,19 @@ $nodeLineHeight: calc($nodePadding / 2);
   padding: 0;
   list-style-type: none;
 
-  &:before, &:after {
+  &:before,
+  &:after {
     transition: all .35s;
   }
 }
+
 .org-tree-node-label {
   position: relative;
   display: inline-block;
   // padding: 15px 0px;
   cursor: pointer;
   white-space: nowrap;
+
   .org-tree-node-label-inner {
     padding: 15px 30px;
     text-align: center;
@@ -71,39 +78,40 @@ $nodeLineHeight: calc($nodePadding / 2);
     // box-shadow: 0 1px 5px rgba(0, 0, 0, .15);
   }
 }
+
 .org-tree-node-icon {
   position: absolute;
-  top: 100%;
-  left: 51%;
-  margin-left: -11px;
-  margin-top: 9px;
+  left: 50%;
+  bottom: -$nodeLineHeight / 2;
+  transform: translate(-50%, 50%);
   background-color: #fff;
   z-index: 10;
   cursor: pointer;
   transition: all .35s ease;
 }
+
 .org-tree-node-btn {
   // @extend .org-tree-node-icon;
-  position: absolute;
-  top: 84%;
-  left: 61%;
-
+  position: relative;
+  display: inline-block;
   background-color: #fff;
   z-index: 10;
   cursor: pointer;
   transition: all .35s ease;
- 
+
   box-shadow: 0 0 2px rgba(0, 0, 0, .15);
   border: 1px solid #ccc;
   border-radius: 50%;
   width: 20px;
   height: 20px;
+
   &:hover {
     background-color: #e7e8e9;
     transform: scale(1.15);
   }
 
-  &:before, &:after {
+  &:before,
+  &:after {
     content: '';
     position: absolute;
   }
@@ -128,18 +136,21 @@ $nodeLineHeight: calc($nodePadding / 2);
     border: none;
   }
 }
+
 .org-tree-node-children {
   .org-tree-node {
     padding-top: $nodeLineHeight;
     display: table-cell;
     vertical-align: top;
 
-    &.is-leaf, &.collapsed {
+    &.is-leaf,
+    &.collapsed {
       padding-left: 10px;
       padding-right: 10px;
     }
 
-    &:before, &:after {
+    &:before,
+    &:after {
       content: '';
       position: absolute;
       top: 0;
@@ -159,28 +170,31 @@ $nodeLineHeight: calc($nodePadding / 2);
     }
   }
 }
+
 .org-tree-node-children {
   .org-tree-node.collapsed {
     padding-bottom: 30px;
 
     .org-tree-node-label:after {
       content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 50%;
-    height: 20px;
-    border-right: 1px solid #ddd;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 50%;
+      height: 20px;
+      border-right: 1px solid #ddd;
     }
   }
 }
-.org-tree > .org-tree-node {
+
+.org-tree>.org-tree-node {
   padding-top: 0;
 
   &:after {
     border-left: 0;
   }
 }
+
 .org-tree-node-children {
   padding-top: $nodeLineHeight;
   display: table;
@@ -217,6 +231,7 @@ $nodeLineHeight: calc($nodePadding / 2);
       }
     }
   }
+
   .org-tree-node-children {
     .org-tree-node {
       display: table-cell;
@@ -224,12 +239,14 @@ $nodeLineHeight: calc($nodePadding / 2);
       padding-top: 0;
       padding-left: 20px;
 
-      &.is-leaf, &.collapsed {
+      &.is-leaf,
+      &.collapsed {
         padding-top: 10px;
         padding-bottom: 10px;
       }
 
-      &:before, &:after {
+      &:before,
+      &:after {
         width: 19px;
         height: 50%;
       }
@@ -250,6 +267,7 @@ $nodeLineHeight: calc($nodePadding / 2);
         border-top: 0;
         border-left: 2px solid #ddd;
       }
+
       &:not(:only-child):after {
         border-top: 1px solid #ddd;
       }
@@ -265,8 +283,9 @@ $nodeLineHeight: calc($nodePadding / 2);
     vertical-align: middle;
   }
 
- .org-tree-node-children .org-tree-node.collapsed {
+  .org-tree-node-children .org-tree-node.collapsed {
     padding-right: 30px;
+
     .org-tree-node-label:after {
       top: 0;
       left: 100%;
@@ -284,7 +303,7 @@ $nodeLineHeight: calc($nodePadding / 2);
     margin-left: 9px;
   }
 
-  & > .org-tree-node:only-child:before {
+  &>.org-tree-node:only-child:before {
     border-bottom: 0;
   }
 
@@ -306,7 +325,7 @@ $nodeLineHeight: calc($nodePadding / 2);
       display: none;
     }
 
-    & > .org-tree-node {
+    &>.org-tree-node {
       display: block;
     }
   }

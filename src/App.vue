@@ -5,7 +5,7 @@
 -->
 <template>
   <div class="container1">
-    <vue-power-tree :data="dataSource" :props="defaultProps" tree-type="org" default-expand-all>
+    <vue-power-tree :data="dataSource" :props="defaultProps" :expand-on-click-node="true" tree-type="org" default-expand-all>
       <template v-slot="{ node, data }">
         <div class="card-container">
           <div class="card-header">
@@ -36,7 +36,7 @@ import VuePowerTree from '../packages/index.ts'
 import { ref, computed } from 'vue'
 
 interface Tree {
-  id?: number,
+  id?: number
   label: string
   children?: Tree[]
 }
@@ -58,15 +58,15 @@ var arr = [
 ]
 
 interface Task {
-  "id": string | number,
-  "taskCode": string,
-  "taskName": string,
-  "ruleDescription": string,
+  id: string | number
+  taskCode: string
+  taskName: string
+  ruleDescription: string
 }
 
 interface TreeNode {
-  task?: Task,
-  sonTaskList?: TreeNode[],
+  task?: Task
+  sonTaskList?: TreeNode[]
   expandNode?: Boolean
 }
 
@@ -75,82 +75,81 @@ const expanded = ref(false)
 const dataSource: TreeNode[] = [
   {
     task: {
-      "id": "1",
-      "taskCode": "PATROL.enterprise.explosibility",
-      "taskName": "企业易爆品查询",
-      "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+      id: '1',
+      taskCode: 'PATROL.enterprise.explosibility',
+      taskName: '企业易爆品查询',
+      ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
     },
     sonTaskList: [
       {
         task: {
-          "id": "1-1",
-          "taskCode": "PATROL.enterprise.explosibility",
-          "taskName": "企业易爆品查询",
-          "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+          id: '1-1',
+          taskCode: 'PATROL.enterprise.explosibility',
+          taskName: '企业易爆品查询',
+          ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
         },
         sonTaskList: [
           {
             task: {
-              "id": "1-1-1",
-              "taskCode": "PATROL.enterprise.explosibility",
-              "taskName": "企业易爆品查询",
-              "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+              id: '1-1-1',
+              taskCode: 'PATROL.enterprise.explosibility',
+              taskName: '企业易爆品查询',
+              ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
             }
           },
           {
             task: {
-              "id": "1-1-2",
-              "taskCode": "PATROL.enterprise.explosibility",
-              "taskName": "企业易爆品查询",
-              "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+              id: '1-1-2',
+              taskCode: 'PATROL.enterprise.explosibility',
+              taskName: '企业易爆品查询',
+              ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
             }
           },
           {
             task: {
-              "id": "1-1-3",
-              "taskCode": "PATROL.enterprise.explosibility",
-              "taskName": "企业易爆品查询",
-              "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+              id: '1-1-3',
+              taskCode: 'PATROL.enterprise.explosibility',
+              taskName: '企业易爆品查询',
+              ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
             }
           },
           {
             task: {
-              "id": "1-1-4",
-              "taskCode": "PATROL.enterprise.explosibility",
-              "taskName": "企业易爆品查询",
-              "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+              id: '1-1-4',
+              taskCode: 'PATROL.enterprise.explosibility',
+              taskName: '企业易爆品查询',
+              ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
             }
-          },
+          }
         ]
       },
       {
         task: {
-          "id": "1-2",
-          "taskCode": "PATROL.enterprise.explosibility",
-          "taskName": "企业易爆品查询",
-          "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+          id: '1-2',
+          taskCode: 'PATROL.enterprise.explosibility',
+          taskName: '企业易爆品查询',
+          ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
         }
       },
       {
         task: {
-          "id": "1-3",
-          "taskCode": "PATROL.enterprise.explosibility",
-          "taskName": "企业易爆品查询",
-          "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+          id: '1-3',
+          taskCode: 'PATROL.enterprise.explosibility',
+          taskName: '企业易爆品查询',
+          ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
         }
       },
       {
         task: {
-          "id": "1-4",
-          "taskCode": "PATROL.enterprise.explosibility",
-          "taskName": "企业易爆品查询",
-          "ruleDescription": "芋道源码,对企业易爆品巡查超过100个",
+          id: '1-4',
+          taskCode: 'PATROL.enterprise.explosibility',
+          taskName: '企业易爆品查询',
+          ruleDescription: '芋道源码,对企业易爆品巡查超过100个'
         }
-      },
+      }
     ]
   }
 ]
-
 
 function getExpandedCount(): number {
   const secondLevel = dataSource[0].son
@@ -158,14 +157,12 @@ function getExpandedCount(): number {
 }
 
 const formatedDataSource = computed((): TreeNode[] => {
-  if(expanded) return dataSource
-
+  if (expanded) return dataSource
 
   return []
 })
 
 console.log(dataSource)
-
 
 const data: Tree[] = [
   {
@@ -184,7 +181,6 @@ const data: Tree[] = [
             id: 6,
             label: '客群规则2'
           }
-
         ]
       },
       {
@@ -213,10 +209,9 @@ const data: Tree[] = [
   }
 ]
 
-
 const defaultProps = {
   children: 'sonTaskList',
-  label: 'taskName',
+  label: 'taskName'
 }
 </script>
 <style lang="scss">
@@ -231,12 +226,12 @@ const defaultProps = {
   width: 388px;
   height: 341px;
   border-radius: 8px;
-  border: 1px solid #D7DAE2;
+  border: 1px solid #d7dae2;
   overflow: hidden;
   text-align: left;
 
   .card-header {
-    background: #F7F8FB;
+    background: #f7f8fb;
     font-size: 18px;
     font-weight: 600;
     color: #323640;
