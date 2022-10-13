@@ -82,7 +82,7 @@ $nodeLineHeight: calc($nodePadding / 2);
 .org-tree-node-icon {
   position: absolute;
   left: 50%;
-  bottom: -$nodeLineHeight / 2;
+  bottom: calc($nodeLineHeight / -2);
   transform: translate(-50%, 50%);
   background-color: #fff;
   z-index: 10;

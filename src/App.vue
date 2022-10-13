@@ -4,8 +4,8 @@
  * @Description: file content
 -->
 <template>
-  <div class="container1">
-    <vue-power-tree :data="dataSource" :props="defaultProps" :expand-on-click-node="true" tree-type="org" default-expand-all>
+  <div class="container">
+    <vue-power-tree :data="dataSource" :props="defaultProps" :expand-on-click-node="false" tree-type="org" default-expand-all @node-expand="onExpand" @node-collapse="onCollapse">
       <template v-slot="{ node, data }">
         <div class="card-container">
           <div class="card-header">
@@ -13,49 +13,25 @@
           </div>
         </div>
       </template>
-    </vue-power-tree>
-
-    <!-- <vue-power-tree :data="data" tree-type="org" default-expand-all>
-      <template v-slot:icon-node="slotProps">
-        <div></div>
+      <template v-slot:icon-node="{ node }">
+        <div class="expand-icon">
+          <div v-if="node.expanded" class="minus">-</div>
+          <div v-else class="plus">
+            {{ node.childNodes.length }}
+          </div>
+        </div>
       </template>
-    </vue-power-tree> -->
+    </vue-power-tree>
   </div>
 </template>
-<!-- <template v-slot:icon-node="slotProps">
-  <div v-if="slotProps.node.expanded" class="minus">
-    -</div>
-  <div v-else class="plus">
-    +
-  </div>
-</template> -->
 <script lang="ts" setup>
 import VuePowerTree from '../packages/index.ts'
-// import VuePowerTree from "vue-power-tree"
-// import "vue-power-tree/dist/style.css"
-import { ref, computed } from 'vue'
 
 interface Tree {
   id?: number
   label: string
   children?: Tree[]
 }
-
-var arr = [
-  {
-    task: {},
-    sonTaskList: [
-      {
-        task: {},
-        sonTaskList: []
-      },
-      {
-        task: {},
-        sonTaskList: []
-      }
-    ]
-  }
-]
 
 interface Task {
   id: string | number
@@ -69,8 +45,6 @@ interface TreeNode {
   sonTaskList?: TreeNode[]
   expandNode?: Boolean
 }
-
-const expanded = ref(false)
 
 const dataSource: TreeNode[] = [
   {
@@ -151,63 +125,13 @@ const dataSource: TreeNode[] = [
   }
 ]
 
-function getExpandedCount(): number {
-  const secondLevel = dataSource[0].son
-  return 0
+function onExpand() {
+  console.log('onExpand', )
 }
 
-const formatedDataSource = computed((): TreeNode[] => {
-  if (expanded) return dataSource
-
-  return []
-})
-
-console.log(dataSource)
-
-const data: Tree[] = [
-  {
-    id: 0,
-    label: '主活动',
-    children: [
-      {
-        id: 2,
-        label: '子活动1',
-        children: [
-          {
-            id: 5,
-            label: '客群规则1'
-          },
-          {
-            id: 6,
-            label: '客群规则2'
-          }
-        ]
-      },
-      {
-        id: 3,
-        label: '子活动2',
-        children: [
-          {
-            id: 7,
-            label: '客群规则3'
-          },
-          {
-            id: 8,
-            label: '客群规则4'
-          }
-        ]
-      },
-      {
-        id: 4,
-        label: '子活动3'
-      },
-      {
-        id: 9,
-        label: '子活动4'
-      }
-    ]
-  }
-]
+function onCollapse() {
+  console.log('onCollapse', )
+}
 
 const defaultProps = {
   children: 'sonTaskList',
@@ -237,5 +161,14 @@ const defaultProps = {
     color: #323640;
     padding: 24px 32px;
   }
+}
+.expand-icon {
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  color: #777;
 }
 </style>

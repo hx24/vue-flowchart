@@ -1,42 +1,62 @@
 <template>
-  <div v-show="node.visible" ref="node$" :class="[
-  
-    (treeType == 'org' ? 'org-tree-node' : 'el-tree-node'),
-    { 'collapsed': !expanded },
-    { 'is-expanded': expanded },
-    { 'is-leaf': expanded && treeType == 'org' },
-    { 'is-current': node.isCurrent },
-    { 'is-hidden': !node.visible },
-    { 'is-focusable': !node.disabled },
-    { 'is-checked': !node.disabled && node.checked },
-    getNodeClass(node),
-  ]" role="treeitem" tabindex="-1" :aria-expanded="expanded" :aria-disabled="node.disabled"
-    :aria-checked="node.checked" :draggable="tree.props.draggable" :data-key="getNodeKey(node)"
-    @click.stop="handleClick" @contextmenu="handleContextMenu" @dragstart.stop="handleDragStart"
-    @dragover.stop="handleDragOver" @dragend.stop="handleDragEnd" @drop.stop="handleDrop">
+  <div
+    v-show="node.visible"
+    ref="node$"
+    :class="[
+      treeType == 'org' ? 'org-tree-node' : 'el-tree-node',
+      { collapsed: !expanded },
+      { 'is-expanded': expanded },
+      { 'is-leaf': expanded && treeType == 'org' },
+      { 'is-current': node.isCurrent },
+      { 'is-hidden': !node.visible },
+      { 'is-focusable': !node.disabled },
+      { 'is-checked': !node.disabled && node.checked },
+      getNodeClass(node)
+    ]"
+    role="treeitem"
+    tabindex="-1"
+    :aria-expanded="expanded"
+    :aria-disabled="node.disabled"
+    :aria-checked="node.checked"
+    :draggable="tree.props.draggable"
+    :data-key="getNodeKey(node)"
+    @click.stop="handleClick"
+    @contextmenu="handleContextMenu"
+    @dragstart.stop="handleDragStart"
+    @dragover.stop="handleDragOver"
+    @dragend.stop="handleDragEnd"
+    @drop.stop="handleDrop"
+  >
     <!-- 组织树 -->
     <div class="org-tree-node-label" v-if="treeType == 'org'">
-      <node-icon v-if="node.childNodes && node.childNodes.length > 0" :node="node">
+      <node-icon
+        v-if="node.childNodes && node.childNodes.length > 0"
+        :node="node"
+        @node-collapse="(...args) => emitToCtx('node-collapse', ...args)"
+        @node-expand="(...args) => emitToCtx('node-expand', ...args)"
+      >
         <template v-slot="slotProps">
           <slot :node="slotProps.node"></slot>
-
         </template>
       </node-icon>
       <node-content :node="node" :render-content="renderContent" :tree-type="treeType" />
     </div>
     <!-- 普通树 -->
     <div class="el-tree-node__content" v-else :style="{ paddingLeft: (node.level - 1) * tree.props.indent + 'px' }">
-      <el-icon v-if="tree.props.icon || CaretRight" :class="[
-        'el-tree-node__expand-icon',
-        { 'is-leaf': node.isLeaf },
-        {
-          expanded: !node.isLeaf && expanded,
-        },
-      ]" @click.stop="handleExpandIconClick">
+      <el-icon
+        v-if="tree.props.icon || CaretRight"
+        :class="[
+          'el-tree-node__expand-icon',
+          { 'is-leaf': node.isLeaf },
+          {
+            expanded: !node.isLeaf && expanded
+          }
+        ]"
+        @click.stop="handleExpandIconClick"
+      >
         <component :is="tree.props.icon || CaretRight" />
       </el-icon>
-      <el-checkbox v-if="showCheckbox" :model-value="node.checked" :indeterminate="node.indeterminate"
-        :disabled="!!node.disabled" @click.stop @change="handleCheckChange" />
+      <el-checkbox v-if="showCheckbox" :model-value="node.checked" :indeterminate="node.indeterminate" :disabled="!!node.disabled" @click.stop @change="handleCheckChange" />
       <el-icon v-if="node.loading" class="el-tree-node__loading-icon is-loading">
         <loading />
       </el-icon>
@@ -45,12 +65,25 @@
 
     <!-- 过渡效果 -->
     <div v-if="treeType == 'org'">
-      <div v-if="(!renderAfterExpand || childNodeRendered) && node.childNodes.length > 0" v-show="expanded"
-        :class="treeType == 'org' ? 'org-tree-node-children' : 'el-tree-node__children'" role="group"
-        :aria-expanded="expanded">
-        <el-tree-node v-for="child in node.childNodes" :key="getNodeKey(child)" :render-content="renderContent"
-          :render-after-expand="renderAfterExpand" :show-checkbox="showCheckbox" :node="child" :accordion="accordion"
-          :props="props" @node-expand="handleChildNodeExpand" :tree-type="treeType">
+      <div
+        v-if="(!renderAfterExpand || childNodeRendered) && node.childNodes.length > 0"
+        v-show="expanded"
+        :class="treeType == 'org' ? 'org-tree-node-children' : 'el-tree-node__children'"
+        role="group"
+        :aria-expanded="expanded"
+      >
+        <el-tree-node
+          v-for="child in node.childNodes"
+          :key="getNodeKey(child)"
+          :render-content="renderContent"
+          :render-after-expand="renderAfterExpand"
+          :show-checkbox="showCheckbox"
+          :node="child"
+          :accordion="accordion"
+          :props="props"
+          @node-expand="handleChildNodeExpand"
+          :tree-type="treeType"
+        >
           <template v-slot="slotProps">
             <slot :node="slotProps.node"></slot>
           </template>
@@ -59,27 +92,32 @@
     </div>
     <div v-else>
       <collapse-transition>
-        <div v-if="(!renderAfterExpand || childNodeRendered) && node.childNodes.length > 0" v-show="expanded"
-          :class="treeType == 'org' ? 'org-tree-node-children' : 'el-tree-node__children'" role="group"
-          :aria-expanded="expanded">
-          <el-tree-node v-for="child in node.childNodes" :key="getNodeKey(child)" :render-content="renderContent"
-            :render-after-expand="renderAfterExpand" :show-checkbox="showCheckbox" :node="child" :accordion="accordion"
-            :props="props" @node-expand="handleChildNodeExpand" :tree-type="treeType" />
+        <div
+          v-if="(!renderAfterExpand || childNodeRendered) && node.childNodes.length > 0"
+          v-show="expanded"
+          :class="treeType == 'org' ? 'org-tree-node-children' : 'el-tree-node__children'"
+          role="group"
+          :aria-expanded="expanded"
+        >
+          <el-tree-node
+            v-for="child in node.childNodes"
+            :key="getNodeKey(child)"
+            :render-content="renderContent"
+            :render-after-expand="renderAfterExpand"
+            :show-checkbox="showCheckbox"
+            :node="child"
+            :accordion="accordion"
+            :props="props"
+            @node-expand="handleChildNodeExpand"
+            :tree-type="treeType"
+          />
         </div>
       </collapse-transition>
     </div>
   </div>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  getCurrentInstance,
-  inject,
-  nextTick,
-  provide,
-  ref,
-  watch,
-} from 'vue'
+import { defineComponent, getCurrentInstance, inject, nextTick, provide, ref, watch } from 'vue'
 import { isFunction, isString } from '@vue/shared'
 // 依赖组件
 import CollapseTransition from './components/collapse-transition.vue'
@@ -108,34 +146,32 @@ export default defineComponent({
     NodeIcon,
     ElIcon,
     CaretRight,
-    Loading,
+    Loading
   },
   props: {
     node: {
       type: Node,
-      default: () => ({}),
+      default: () => ({})
     },
     treeType: {
       // 树类型，普通模式：normal，组织树模式：org
       type: String,
-      default: 'normal',
+      default: 'normal'
     },
     props: {
       type: Object as PropType<TreeOptionProps>,
-      default: () => ({}),
+      default: () => ({})
     },
     accordion: Boolean,
     renderContent: Function,
     renderAfterExpand: Boolean,
     showCheckbox: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   emits: ['node-expand'],
   setup(props, ctx) {
-
-
     const { broadcastExpanded } = useNodeExpandEventBroadcast(props)
     const tree = inject<RootTreeType>('RootTree')
     const expanded = ref(false)
@@ -149,7 +185,6 @@ export default defineComponent({
     provide('NodeInstance', instance)
     if (!tree) {
       console.warn('Tree', "Can not find node's tree.")
-
     }
 
     if (props.node.expanded) {
@@ -217,10 +252,7 @@ export default defineComponent({
     }
 
     const handleSelectChange = (checked: boolean, indeterminate: boolean) => {
-      if (
-        oldChecked.value !== checked ||
-        oldIndeterminate.value !== indeterminate
-      ) {
+      if (oldChecked.value !== checked || oldIndeterminate.value !== indeterminate) {
         tree.ctx.emit('check-change', props.node.data, checked, indeterminate)
       }
       oldChecked.value = checked
@@ -230,11 +262,7 @@ export default defineComponent({
     const handleClick = (e: MouseEvent) => {
       const store = tree.store.value
       store.setCurrentNode(props.node)
-      tree.ctx.emit(
-        'current-change',
-        store.currentNode ? store.currentNode.data : null,
-        store.currentNode
-      )
+      tree.ctx.emit('current-change', store.currentNode ? store.currentNode.data : null, store.currentNode)
       tree.currentNode.value = props.node
 
       if (tree.props.expandOnClickNode) {
@@ -243,7 +271,7 @@ export default defineComponent({
 
       if (tree.props.checkOnClickNode && !props.node.disabled) {
         handleCheckChange(null, {
-          target: { checked: !props.node.checked },
+          target: { checked: !props.node.checked }
         })
       }
       tree.ctx.emit('node-click', props.node.data, props.node, instance, e)
@@ -254,25 +282,19 @@ export default defineComponent({
         event.stopPropagation()
         event.preventDefault()
       }
-      tree.ctx.emit(
-        'node-contextmenu',
-        event,
-        props.node.data,
-        props.node,
-        instance
-      )
+      tree.ctx.emit('node-contextmenu', event, props.node.data, props.node, instance)
     }
 
     const handleExpandIconClick = () => {
       if (props.node.isLeaf) return
       if (expanded.value) {
+        console.log('emit collapse')
         tree.ctx.emit('node-collapse', props.node.data, props.node, instance)
-        console.log('222', props.node)
-
-        // props.node.collapse()
+        props.node.collapse()
       } else {
-        // props.node.expand()
+        props.node.expand()
         ctx.emit('node-expand', props.node.data, props.node, instance)
+        console.log('emit expand')
       }
     }
 
@@ -284,16 +306,12 @@ export default defineComponent({
           checkedNodes: store.getCheckedNodes(),
           checkedKeys: store.getCheckedKeys(),
           halfCheckedNodes: store.getHalfCheckedNodes(),
-          halfCheckedKeys: store.getHalfCheckedKeys(),
+          halfCheckedKeys: store.getHalfCheckedKeys()
         })
       })
     }
 
-    const handleChildNodeExpand = (
-      nodeData: TreeNodeData,
-      node: Node,
-      instance: ComponentInternalInstance
-    ) => {
+    const handleChildNodeExpand = (nodeData: TreeNodeData, node: Node, instance: ComponentInternalInstance) => {
       broadcastExpanded(node)
       tree.ctx.emit('node-expand', nodeData, node, instance)
     }
@@ -308,7 +326,7 @@ export default defineComponent({
       if (!tree.props.draggable) return
       dragEvents.treeNodeDragOver({
         event,
-        treeNode: { $el: node$.value, node: props.node },
+        treeNode: { $el: node$.value, node: props.node }
       })
     }
 
@@ -321,8 +339,12 @@ export default defineComponent({
       dragEvents.treeNodeDragEnd(event)
     }
 
-    return {
+    const emitToCtx = (name: string, ...args: any[]) => {
+      tree.ctx.emit(name, ...args)
+    }
 
+
+    return {
       node$,
       tree,
       expanded,
@@ -342,7 +364,8 @@ export default defineComponent({
       handleDrop,
       handleDragEnd,
       CaretRight,
+      emitToCtx
     }
-  },
+  }
 })
 </script>
